@@ -1,0 +1,1319 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --amber: #F5A623;
+    --amber-deep: #E8920D;
+    --amber-light: #FEF3DC;
+    --amber-pale: #FFFBF0;
+    --green-deep: #1A3C2A;
+    --green-mid: #2D5A3F;
+    --green-light: #E8F4EC;
+    --text-primary: #1A1A1A;
+    --text-secondary: #5A5A5A;
+    --text-muted: #9A9A9A;
+    --border: rgba(0,0,0,0.08);
+    --surface: #FFFFFF;
+    --bg: #F8F6F0;
+  }
+
+  .demo-root {
+    font-family: 'Outfit', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.25;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-orb-1 { width: 400px; height: 400px; background: var(--amber); top: -120px; right: -80px; }
+  .bg-orb-2 { width: 300px; height: 300px; background: #2D5A3F; bottom: 50px; left: -80px; }
+
+  .demo-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 32px 24px 60px;
+  }
+
+  .logo-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+
+  .logo-bee {
+    width: 44px;
+    height: 44px;
+  }
+
+  .logo-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green-deep);
+    letter-spacing: -0.5px;
+  }
+
+  .logo-text span {
+    color: var(--amber);
+  }
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 36px;
+  }
+
+  .step-dot {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Syne', sans-serif;
+    transition: all 0.35s ease;
+    border: 2px solid transparent;
+    flex-shrink: 0;
+  }
+
+  .step-dot.done {
+    background: var(--green-mid);
+    color: #fff;
+    border-color: var(--green-mid);
+  }
+
+  .step-dot.active {
+    background: var(--amber);
+    color: var(--green-deep);
+    border-color: var(--amber);
+    box-shadow: 0 0 0 4px rgba(245,166,35,0.2);
+  }
+
+  .step-dot.future {
+    background: transparent;
+    color: var(--text-muted);
+    border-color: var(--border);
+  }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    transition: all 0.35s ease;
+  }
+
+  .step-line.done {
+    background: var(--green-mid);
+  }
+
+  .chat-card {
+    background: var(--surface);
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    animation: slideUp 0.4s ease;
+  }
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .chat-header {
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+    padding: 28px 32px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chat-header::after {
+    content: '';
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(245,166,35,0.12);
+    top: -60px;
+    right: -40px;
+  }
+
+  .bot-bubble {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .bot-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--amber);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 20px;
+  }
+
+  .bot-msg {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 0 16px 16px 16px;
+    padding: 14px 18px;
+    color: #fff;
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 480px;
+    backdrop-filter: blur(4px);
+  }
+
+  .bot-msg .greeting-name {
+    color: var(--amber);
+    font-weight: 600;
+  }
+
+  .chat-body {
+    padding: 28px 32px;
+  }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+  }
+
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .industry-card {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--surface);
+  }
+
+  .industry-card:hover {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+    transform: translateY(-2px);
+  }
+
+  .industry-card.selected {
+    border-color: var(--amber);
+    background: var(--amber-light);
+    box-shadow: 0 0 0 3px rgba(245,166,35,0.15);
+  }
+
+  .industry-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .industry-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pain-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--surface);
+  }
+
+  .pain-item:hover {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+  }
+
+  .pain-item.selected {
+    border-color: var(--amber);
+    background: var(--amber-light);
+  }
+
+  .pain-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    font-size: 11px;
+  }
+
+  .pain-item.selected .pain-check {
+    background: var(--amber);
+    border-color: var(--amber);
+    color: white;
+  }
+
+  .pain-text {
+    font-size: 14px;
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  .pain-text small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 12px;
+    margin-top: 2px;
+  }
+
+  .drag-zone {
+    min-height: 140px;
+    border: 2px dashed var(--border);
+    border-radius: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 16px;
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+    position: relative;
+    background: var(--amber-pale);
+  }
+
+  .drag-zone.drag-over {
+    border-color: var(--amber);
+    background: var(--amber-light);
+  }
+
+  .drag-zone-placeholder {
+    color: var(--text-muted);
+    font-size: 13px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .module-shelf {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .module-chip {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 40px;
+    background: var(--surface);
+    cursor: grab;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .module-chip:hover {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+  }
+
+  .module-chip.dragging {
+    opacity: 0.4;
+  }
+
+  .module-chip.dropped {
+    background: var(--green-light);
+    border-color: var(--green-mid);
+    color: var(--green-deep);
+  }
+
+  .module-chip .chip-icon {
+    font-size: 16px;
+  }
+
+  .chip-remove {
+    margin-left: 4px;
+    font-size: 14px;
+    color: var(--text-muted);
+    cursor: pointer;
+    line-height: 1;
+  }
+
+  .chip-remove:hover { color: #e74c3c; }
+
+  .scale-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .scale-opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: var(--surface);
+  }
+
+  .scale-opt:hover {
+    border-color: var(--amber);
+    background: var(--amber-pale);
+  }
+
+  .scale-opt.selected {
+    border-color: var(--amber);
+    background: var(--amber-light);
+  }
+
+  .scale-radio {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    margin-top: 2px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scale-opt.selected .scale-radio {
+    border-color: var(--amber);
+    background: var(--amber);
+  }
+
+  .scale-radio::after {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: white;
+    display: none;
+  }
+
+  .scale-opt.selected .scale-radio::after { display: block; }
+
+  .scale-info { flex: 1; }
+  .scale-title { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+  .scale-desc { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+  .desc-box {
+    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 100%);
+    border-radius: 18px;
+    padding: 28px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .desc-box::before {
+    content: '"';
+    position: absolute;
+    font-size: 140px;
+    font-family: 'Syne', sans-serif;
+    color: rgba(255,255,255,0.06);
+    top: -20px;
+    left: 20px;
+    line-height: 1;
+  }
+
+  .desc-box-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .desc-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(255,255,255,0.9);
+    position: relative;
+    z-index: 1;
+  }
+
+  .desc-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  .desc-tag {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .field-group.full { grid-column: 1 / -1; }
+
+  .field-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.2px;
+  }
+
+  .field-input {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .field-input:focus {
+    border-color: var(--amber);
+  }
+
+  .field-select {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-primary);
+    background: var(--surface);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239A9A9A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+  }
+
+  .field-select:focus { border-color: var(--amber); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, var(--amber) 0%, var(--amber-deep) 100%);
+    color: var(--green-deep);
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.3px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(245,166,35,0.35);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    background: var(--green-deep);
+    color: #fff;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+    margin-top: 20px;
+  }
+
+  .btn-next:hover {
+    background: var(--green-mid);
+    transform: translateX(2px);
+  }
+
+  .btn-next:disabled {
+    opacity: 0.4;
+    cursor: default;
+    transform: none;
+  }
+
+  .btn-back {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 0;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: 'Outfit', sans-serif;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 18px;
+    transition: color 0.2s;
+  }
+
+  .btn-back:hover { color: var(--text-primary); }
+
+  .step-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+
+  .generating-state {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    background: var(--amber-pale);
+    border-radius: 12px;
+    border: 1px solid rgba(245,166,35,0.2);
+    margin-bottom: 16px;
+  }
+
+  .dots span {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    margin: 0 2px;
+    animation: bounce 1.2s infinite;
+  }
+
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
+    40% { transform: scale(1.3); opacity: 1; }
+  }
+
+  .success-header {
+    text-align: center;
+    padding: 24px 0 8px;
+  }
+
+  .success-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--amber), var(--amber-deep));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px rgba(245,166,35,0.3);
+  }
+
+  .success-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--green-deep);
+    margin-bottom: 6px;
+  }
+
+  .success-sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  .h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--green-deep);
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .sub {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 22px;
+    line-height: 1.5;
+  }
+
+  .badge-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .badge {
+    background: var(--green-light);
+    color: var(--green-deep);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(45,90,63,0.15);
+  }
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .timeline-item:last-child { border-bottom: none; }
+
+  .timeline-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .timeline-t { font-size: 13px; color: var(--text-primary); }
+  .timeline-t small { display: block; font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+</style>
+
+<div class="demo-root">
+  <div class="bg-orb bg-orb-1"></div>
+  <div class="bg-orb bg-orb-2"></div>
+
+  <div class="demo-inner">
+
+    <div class="logo-bar">
+      <svg class="logo-bee" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="22" cy="22" r="20" fill="#F5A623"/>
+        <ellipse cx="22" cy="24" rx="10" ry="11" fill="#FEC84B"/>
+        <circle cx="18" cy="20" r="2" fill="#1A3C2A"/>
+        <circle cx="26" cy="20" r="2" fill="#1A3C2A"/>
+        <path d="M18 27 Q22 30 26 27" stroke="#1A3C2A" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M14 16 Q10 10 16 12" stroke="#F5A623" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path d="M30 16 Q34 10 28 12" stroke="#F5A623" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.6"/>
+        <path d="M13 22 Q8 22 10 26" stroke="#E8920D" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <path d="M31 22 Q36 22 34 26" stroke="#E8920D" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+      </svg>
+      <div class="logo-text">Trace <span>AgTech</span></div>
+    </div>
+
+    <div class="step-indicator" id="stepIndicator"></div>
+
+    <div class="chat-card" id="mainCard">
+      <div class="chat-header">
+        <div class="bot-bubble">
+          <div class="bot-avatar">🐝</div>
+          <div class="bot-msg" id="botMsg">
+            Hi there! I'm Tracer, your AgTech guide.<br>
+            Let's build your <span class="greeting-name">personalized demo</span> in just a few steps. Ready to begin?
+          </div>
+        </div>
+      </div>
+      <div class="chat-body" id="chatBody"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const INDUSTRIES = [
+  { id:'tea', icon:'🌿', name:'Tea & Spices' },
+  { id:'fruits', icon:'🍓', name:'Fruits & Vegetables' },
+  { id:'grains', icon:'🌾', name:'Grains & Cereals' },
+  { id:'dairy', icon:'🥛', name:'Dairy & Livestock' },
+  { id:'coffee', icon:'☕', name:'Coffee & Cocoa' },
+  { id:'aqua', icon:'🐟', name:'Aquaculture' },
+  { id:'sugarcane', icon:'🎋', name:'Sugarcane' },
+  { id:'cotton', icon:'🪻', name:'Cotton & Fibre' },
+  { id:'other', icon:'🌱', name:'Other Agri' },
+];
+
+const PAIN_POINTS = {
+  tea: [
+    { icon:'🗂️', t:'No farmer data system', d:'Paper-based farmer registration with no digital records' },
+    { icon:'📍', t:'Field traceability gaps', d:'Cannot geo-tag or map individual tea gardens' },
+    { icon:'📋', t:'Audit failures', d:'Unable to produce documentation for Rainforest Alliance or Fairtrade audits' },
+    { icon:'🔗', t:'Supply chain opacity', d:'Buyers cannot verify leaf source or processing chain' },
+    { icon:'🌡️', t:'GHG & sustainability reporting', d:'No carbon or emissions data to present to buyers' },
+    { icon:'📦', t:'Collection & weighment errors', d:'Manual errors in daily collection and payment records' },
+  ],
+  fruits: [
+    { icon:'🚚', t:'Cold chain traceability', d:'No visibility from farm to packing house to retail' },
+    { icon:'🧪', t:'Residue testing gaps', d:'Cannot track pesticide application and MRL compliance' },
+    { icon:'🗺️', t:'Field mapping', d:'No geo-tagged records of individual farm plots' },
+    { icon:'📑', t:'Certification compliance', d:'GlobalG.A.P. or Organic certification documentation gaps' },
+    { icon:'📉', t:'Rejection tracking', d:'Cannot trace which farm caused a shipment rejection' },
+    { icon:'📲', t:'Farmer communication', d:'No digital channel to push advisories or collect data' },
+  ],
+  grains: [
+    { icon:'🏭', t:'Mill procurement records', d:'No digital linkage between farmer and procurement center' },
+    { icon:'📦', t:'Lot-level traceability', d:'Cannot trace grain lots back to source fields' },
+    { icon:'💰', t:'Payment disputes', d:'Manual weighment leads to farmer payment disputes' },
+    { icon:'🌍', t:'Export documentation', d:'Cannot generate compliant phytosanitary or origin documents' },
+    { icon:'📊', t:'Crop yield forecasting', d:'No data to forecast seasonal supply and plan procurement' },
+    { icon:'🌱', t:'Sustainability certification', d:'RSPO or SAN certification trail missing' },
+  ],
+  dairy: [
+    { icon:'🐄', t:'Animal health records', d:'No digital health, vaccination or production records per animal' },
+    { icon:'🥛', t:'Milk quality traceability', d:'Cannot trace adulteration or somatic cell count to source' },
+    { icon:'📍', t:'Farmer & herd mapping', d:'No geo-linked farmer and herd profiles' },
+    { icon:'📋', t:'Compliance gaps', d:'FSSAI or export compliance documentation missing' },
+    { icon:'💳', t:'Input credit management', d:'Feed and veterinary input credit tracking is manual' },
+    { icon:'📲', t:'Farmer advisory', d:'No mobile-based advisory for best practices' },
+  ],
+  coffee: [
+    { icon:'🌍', t:'Deforestation regulation', d:'EU EUDR compliance — cannot prove deforestation-free origin' },
+    { icon:'🌐', t:'Origin storytelling', d:'No data to support single-origin or micro-lot claims' },
+    { icon:'📋', t:'4C / RFA audit gaps', d:'Missing field-level data for certification audits' },
+    { icon:'🧪', t:'Processing traceability', d:'No link between wet mill data and farm source' },
+    { icon:'☁️', t:'Carbon footprint', d:'Cannot calculate or report farm-level GHG emissions' },
+    { icon:'💰', t:'Farmer income data', d:'No income or livelihood data for reports to buyers' },
+  ],
+  aqua: [
+    { icon:'🐟', t:'Pond-level traceability', d:'No records linked to specific ponds or grow-out units' },
+    { icon:'💊', t:'Antibiotic use records', d:'Cannot prove antibiotic-free or responsible use claims' },
+    { icon:'📑', t:'ASC/BAP audit', d:'Missing data for aquaculture certification audits' },
+    { icon:'📦', t:'Batch to export', d:'No lot-level trace from harvest to processing to export' },
+    { icon:'📊', t:'Feed conversion data', d:'No digital FCR records per pond or cycle' },
+    { icon:'🌊', t:'Water quality logs', d:'Manual or missing water quality monitoring records' },
+  ],
+  sugarcane: [
+    { icon:'🎋', t:'Farmer plot mapping', d:'No digital or geo-tagged records of cane fields' },
+    { icon:'⚖️', t:'Cane weighment disputes', d:'Errors and disputes in manual weighbridge records' },
+    { icon:'📅', t:'Harvest scheduling', d:'No system to plan and track harvesting per farmer' },
+    { icon:'🌿', t:'Sustainability reporting', d:'Bonsucro certification trail not available' },
+    { icon:'💧', t:'Irrigation records', d:'No data on water use per plot for sustainability audits' },
+    { icon:'💰', t:'Farmer payment', d:'Delays and errors in FRP/SAP payment calculation' },
+  ],
+  cotton: [
+    { icon:'🪻', t:'Farm-level records', d:'No digital farmer and plot profiles for cotton sourcing' },
+    { icon:'📋', t:'BCI / GOTS compliance', d:'Missing audit trail for sustainable cotton certification' },
+    { icon:'🧪', t:'Pesticide tracking', d:'No chemical use records for residue traceability' },
+    { icon:'📦', t:'Ginning traceability', d:'Cannot trace lint bales back to originating farm' },
+    { icon:'🌍', t:'Forced labour due diligence', d:'Cannot document supply chain for UYGHUR Act compliance' },
+    { icon:'💳', t:'Input distribution', d:'No system to track seed, fertilizer or loan disbursement' },
+  ],
+  other: [
+    { icon:'🗂️', t:'Farmer data management', d:'No structured digital farmer registration system' },
+    { icon:'📍', t:'Field traceability', d:'Cannot map or geo-tag farmland and crop activities' },
+    { icon:'📋', t:'Audit readiness', d:'Missing documentation for buyer or certification audits' },
+    { icon:'🔗', t:'Supply chain visibility', d:'No digital trail from farm to processing to market' },
+    { icon:'🌱', t:'Sustainability claims', d:'Cannot measure or report ESG or GHG data' },
+    { icon:'📲', t:'Digital farmer engagement', d:'No mobile channel for advisory or data collection' },
+  ],
+};
+
+const MODULES = [
+  { id:'farmer', icon:'👩‍🌾', label:'Farmer Profiling' },
+  { id:'field', icon:'🗺️', label:'Geo-tagged Fields' },
+  { id:'crop', icon:'🌱', label:'Crop Activities' },
+  { id:'collection', icon:'📦', label:'Collection Data' },
+  { id:'sampling', icon:'🧪', label:'Sampling & QC' },
+  { id:'erp', icon:'📊', label:'ERP / Finance' },
+  { id:'ghg', icon:'🌍', label:'GHG & Emissions' },
+  { id:'cert', icon:'📋', label:'Certifications' },
+  { id:'audit', icon:'🔍', label:'Audit Trail' },
+  { id:'qr', icon:'📲', label:'QR Traceability' },
+  { id:'supply', icon:'🔗', label:'Supply Chain' },
+  { id:'advisory', icon:'💬', label:'Farmer Advisory' },
+];
+
+const SCALES = [
+  { id:'pilot', icon:'🌱', title:'Pilot', desc:'50–500 farmers, single region, quick start in 4 weeks' },
+  { id:'regional', icon:'🌿', title:'Regional rollout', desc:'500–5,000 farmers, multi-district deployment in 3 months' },
+  { id:'enterprise', icon:'🏭', title:'Enterprise', desc:'5,000+ farmers, multi-country, full integration with existing ERP' },
+];
+
+let state = {
+  step: 0,
+  industry: null,
+  pains: [],
+  modules: [],
+  scale: null,
+  contact: {},
+  generatedDesc: '',
+};
+
+const STEPS = ['Industry','Pain Points','Modules','Scale','Your Details','Your Demo'];
+
+function renderStepIndicator() {
+  const el = document.getElementById('stepIndicator');
+  el.innerHTML = STEPS.map((s, i) => {
+    let cls = i < state.step ? 'done' : i === state.step ? 'active' : 'future';
+    let inner = i < state.step ? '✓' : (i + 1);
+    let line = i < STEPS.length - 1
+      ? `<div class="step-line ${i < state.step ? 'done' : ''}"></div>`
+      : '';
+    return `<div class="step-dot ${cls}" title="${s}">${inner}</div>${line}`;
+  }).join('');
+}
+
+function setBotMsg(html) {
+  document.getElementById('botMsg').innerHTML = html;
+}
+
+function render() {
+  renderStepIndicator();
+  const body = document.getElementById('chatBody');
+  body.innerHTML = '';
+
+  const steps = [renderStep0, renderStep1, renderStep2, renderStep3, renderStep4, renderStep5];
+  steps[state.step](body);
+}
+
+function nextBtn(label, onClick, extra='') {
+  return `<button class="btn-next" onclick="${onClick}" id="nextBtn" ${extra}>
+    ${label} <span>→</span>
+  </button>`;
+}
+
+function backBtn() {
+  return `<button class="btn-back" onclick="goBack()">← Back</button>`;
+}
+
+function goBack() {
+  if (state.step > 0) { state.step--; render(); }
+}
+
+function renderStep0(body) {
+  setBotMsg('First things first — which agricultural industry does your operation focus on? This helps me tailor everything for you.');
+  body.innerHTML = `
+    <p class="section-label">Select your industry</p>
+    <div class="industry-grid" id="industryGrid">
+      ${INDUSTRIES.map(ind => `
+        <div class="industry-card ${state.industry === ind.id ? 'selected' : ''}" onclick="selectIndustry('${ind.id}')">
+          <div class="industry-icon">${ind.icon}</div>
+          <div class="industry-name">${ind.name}</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:4px;text-align:right;">
+      ${nextBtn('Next: Pain Points', 'stepNext()', state.industry ? '' : 'disabled')}
+    </div>
+  `;
+}
+
+function selectIndustry(id) {
+  state.industry = id;
+  state.pains = [];
+  render();
+}
+
+function renderStep1(body) {
+  const ind = INDUSTRIES.find(i => i.id === state.industry);
+  const pains = PAIN_POINTS[state.industry] || PAIN_POINTS.other;
+  setBotMsg(`Great choice! ${ind.icon} <strong>${ind.name}</strong> has some unique challenges. Which of these pain points resonate most with your operation? Select all that apply.`);
+  body.innerHTML = `
+    ${backBtn()}
+    <p class="section-label">Select your pain points (choose at least 2)</p>
+    <div class="pain-list">
+      ${pains.map((p, i) => `
+        <div class="pain-item ${state.pains.includes(i) ? 'selected' : ''}" onclick="togglePain(${i})">
+          <div class="pain-check">${state.pains.includes(i) ? '✓' : ''}</div>
+          <div style="font-size:20px;">${p.icon}</div>
+          <div class="pain-text">${p.t}<small>${p.d}</small></div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:4px;text-align:right;">
+      ${nextBtn('Next: Modules', 'stepNext()', state.pains.length >= 2 ? '' : 'disabled')}
+    </div>
+  `;
+}
+
+function togglePain(i) {
+  const idx = state.pains.indexOf(i);
+  if (idx > -1) state.pains.splice(idx, 1);
+  else state.pains.push(i);
+  render();
+}
+
+function renderStep2(body) {
+  setBotMsg('Now let\'s design your traceability stack. Drag the modules you need into the box below — or click them to add. Build your ideal solution!');
+
+  const dropped = new Set(state.modules);
+
+  body.innerHTML = `
+    ${backBtn()}
+    <p class="section-label">Drag modules into your solution</p>
+    <div class="drag-zone" id="dropZone" ondragover="event.preventDefault();this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')" ondrop="handleDrop(event)">
+      ${state.modules.length === 0 ? '<div class="drag-zone-placeholder">📥 Drop modules here to build your stack</div>' : ''}
+      ${state.modules.map(id => {
+        const m = MODULES.find(x => x.id === id);
+        return `<div class="module-chip dropped" data-id="${id}">
+          <span class="chip-icon">${m.icon}</span> ${m.label}
+          <span class="chip-remove" onclick="removeModule('${id}')">×</span>
+        </div>`;
+      }).join('')}
+    </div>
+    <p class="section-label" style="margin-top:16px;">Available modules</p>
+    <div class="module-shelf" id="shelf">
+      ${MODULES.filter(m => !dropped.has(m.id)).map(m => `
+        <div class="module-chip" draggable="true" data-id="${m.id}"
+          ondragstart="handleDragStart(event)"
+          ondragend="handleDragEnd(event)"
+          onclick="addModule('${m.id}')">
+          <span class="chip-icon">${m.icon}</span> ${m.label}
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:4px;text-align:right;">
+      ${nextBtn('Next: Scale', 'stepNext()', state.modules.length >= 1 ? '' : 'disabled')}
+    </div>
+  `;
+}
+
+function handleDragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.dataset.id);
+  e.target.classList.add('dragging');
+}
+
+function handleDragEnd(e) {
+  e.target.classList.remove('dragging');
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  const id = e.dataTransfer.getData('text/plain');
+  addModule(id);
+}
+
+function addModule(id) {
+  if (!state.modules.includes(id)) { state.modules.push(id); render(); }
+}
+
+function removeModule(id) {
+  state.modules = state.modules.filter(x => x !== id);
+  render();
+}
+
+function renderStep3(body) {
+  setBotMsg('Almost there! What is the scale of your operation? This helps us match the right implementation approach and deployment timeline for you.');
+  body.innerHTML = `
+    ${backBtn()}
+    <p class="section-label">Select your operation scale</p>
+    <div class="scale-row">
+      ${SCALES.map(s => `
+        <div class="scale-opt ${state.scale === s.id ? 'selected' : ''}" onclick="selectScale('${s.id}')">
+          <div class="scale-radio"></div>
+          <div style="font-size:22px;">${s.icon}</div>
+          <div class="scale-info">
+            <div class="scale-title">${s.title}</div>
+            <div class="scale-desc">${s.desc}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:4px;text-align:right;">
+      ${nextBtn('Next: Your Details', 'stepNext()', state.scale ? '' : 'disabled')}
+    </div>
+  `;
+}
+
+function selectScale(id) {
+  state.scale = id;
+  render();
+}
+
+function renderStep4(body) {
+  setBotMsg('Almost ready to generate your custom demo! Just a few quick details so we can personalise this for you and book your session.');
+  body.innerHTML = `
+    ${backBtn()}
+    <p class="section-label">Your details</p>
+    <div class="contact-grid">
+      <div class="field-group">
+        <label class="field-label">First name</label>
+        <input class="field-input" type="text" id="fname" placeholder="Priya" value="${state.contact.fname||''}" oninput="updateContact()" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Last name</label>
+        <input class="field-input" type="text" id="lname" placeholder="Nair" value="${state.contact.lname||''}" oninput="updateContact()" />
+      </div>
+      <div class="field-group full">
+        <label class="field-label">Work email</label>
+        <input class="field-input" type="email" id="email" placeholder="priya@company.com" value="${state.contact.email||''}" oninput="updateContact()" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Company / Organisation</label>
+        <input class="field-input" type="text" id="company" placeholder="Green Estates Ltd" value="${state.contact.company||''}" oninput="updateContact()" />
+      </div>
+      <div class="field-group">
+        <label class="field-label">Country</label>
+        <select class="field-select" id="country" onchange="updateContact()">
+          <option value="">Select country</option>
+          ${['India','Sri Lanka','Kenya','Ethiopia','Vietnam','Indonesia','Ghana','Tanzania','Colombia','Brazil','Other'].map(c=>`<option ${state.contact.country===c?'selected':''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field-group full">
+        <label class="field-label">Your role</label>
+        <select class="field-select" id="role" onchange="updateContact()">
+          <option value="">Select your role</option>
+          ${['CEO / Founder','Operations Manager','Sustainability Manager','Supply Chain Manager','IT / Technology Head','Procurement Manager','Quality Manager','Other'].map(r=>`<option ${state.contact.role===r?'selected':''}>${r}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      ${nextBtn('Generate My Demo →', 'generateDemo()', isContactValid() ? '' : 'disabled')}
+    </div>
+  `;
+}
+
+function updateContact() {
+  state.contact = {
+    fname: document.getElementById('fname')?.value || '',
+    lname: document.getElementById('lname')?.value || '',
+    email: document.getElementById('email')?.value || '',
+    company: document.getElementById('company')?.value || '',
+    country: document.getElementById('country')?.value || '',
+    role: document.getElementById('role')?.value || '',
+  };
+  const btn = document.getElementById('nextBtn');
+  if (btn) btn.disabled = !isContactValid();
+}
+
+function isContactValid() {
+  const c = state.contact;
+  return c.fname && c.lname && c.email && c.email.includes('@') && c.company && c.country && c.role;
+}
+
+async function generateDemo() {
+  if (!isContactValid()) return;
+  state.step = 5;
+  renderStepIndicator();
+
+  const ind = INDUSTRIES.find(i => i.id === state.industry);
+  const pains = PAIN_POINTS[state.industry] || PAIN_POINTS.other;
+  const selectedPains = state.pains.map(i => pains[i]?.t).filter(Boolean);
+  const selectedModules = state.modules.map(id => MODULES.find(m => m.id === id)?.label).filter(Boolean);
+  const scale = SCALES.find(s => s.id === state.scale);
+
+  const body = document.getElementById('chatBody');
+  setBotMsg(`Generating your personalised demo profile, ${state.contact.fname}... 🐝`);
+  body.innerHTML = `
+    <div class="generating-state">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <span style="font-size:13px;color:var(--text-secondary);">Building your custom demo summary...</span>
+    </div>
+  `;
+
+  const prompt = `You are Tracer, the AI assistant for Trace AgTech — a farm traceability software platform.
+
+A potential client has just completed the demo configurator. Write a 3-sentence personalised demo description for them. Be warm, specific, and professional. Mention their industry, 2 of their pain points, and 2 of their chosen modules. End with a strong call-to-action.
+
+Client Details:
+- Name: ${state.contact.fname} ${state.contact.lname}
+- Company: ${state.contact.company}
+- Industry: ${ind?.name}
+- Pain Points: ${selectedPains.join(', ')}
+- Modules chosen: ${selectedModules.join(', ')}
+- Scale: ${scale?.title}
+- Country: ${state.contact.country}
+- Role: ${state.contact.role}
+
+Write ONLY the 3-sentence description. No formatting, no headers, no intro. Plain text only.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    const data = await response.json();
+    state.generatedDesc = data.content?.[0]?.text || 'Your personalised Trace AgTech demo is ready. Our team will walk you through a solution tailored to your operation.';
+  } catch (e) {
+    state.generatedDesc = `For ${state.contact.company}, we've designed a Trace AgTech demo that directly addresses your ${ind?.name.toLowerCase()} traceability needs — from eliminating audit gaps to building a verifiable supply chain. We'll showcase ${selectedModules.slice(0,2).join(' and ')} in action, configured for a ${scale?.title.toLowerCase()} deployment across your operation. Let's show you how leading agribusinesses are turning traceability into a competitive advantage — your demo awaits.`;
+  }
+
+  renderStep5(body);
+}
+
+function renderStep5(body) {
+  const ind = INDUSTRIES.find(i => i.id === state.industry);
+  const pains = PAIN_POINTS[state.industry] || PAIN_POINTS.other;
+  const selectedPains = state.pains.map(i => pains[i]?.t).filter(Boolean);
+  const selectedModules = state.modules.map(id => MODULES.find(m => m.id === id)?.label).filter(Boolean);
+  const scale = SCALES.find(s => s.id === state.scale);
+
+  setBotMsg(`🎉 Your personalised demo profile is ready, <span class="greeting-name">${state.contact.fname}</span>! Here's what we'll build for you.`);
+
+  body.innerHTML = `
+    <div class="success-header">
+      <div class="success-icon">🐝</div>
+      <div class="success-title">Your Demo is Configured</div>
+      <div class="success-sub">${state.contact.company} · ${ind?.name} · ${scale?.title}</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="desc-box">
+      <div class="desc-box-title">✦ Your Personalised Summary</div>
+      <div class="desc-text">${state.generatedDesc}</div>
+      <div class="desc-tags">
+        ${selectedModules.map(m => `<span class="desc-tag">${m}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="h2" style="font-size:16px;margin-bottom:12px;">What happens next</div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--amber-light);">📧</div>
+      <div class="timeline-t">Confirmation email sent<small>Check ${state.contact.email} for your summary</small></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--green-light);">📞</div>
+      <div class="timeline-t">A Trace AgTech expert will call you within 24 hours<small>To confirm your demo slot and answer any questions</small></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-icon" style="background:var(--amber-light);">🖥️</div>
+      <div class="timeline-t">Live 45-minute demo session<small>Custom-configured for ${ind?.name} · ${scale?.title} scale</small></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="badge-row" style="margin-bottom:20px;">
+      <span class="badge">${ind?.icon} ${ind?.name}</span>
+      <span class="badge">📏 ${scale?.title}</span>
+      ${selectedPains.slice(0,2).map(p => `<span class="badge">⚡ ${p}</span>`).join('')}
+    </div>
+
+    <button class="btn-primary" onclick="finalSubmit()">
+      🚀 Request My Demo Session
+    </button>
+    <div style="text-align:center;margin-top:12px;font-size:12px;color:var(--text-muted);">
+      No credit card required · Free 45-minute session · Responds within 1 business day
+    </div>
+  `;
+}
+
+function finalSubmit() {
+  const body = document.getElementById('chatBody');
+  setBotMsg(`🎉 You're all set, ${state.contact.fname}! We'll be in touch shortly.`);
+  body.innerHTML = `
+    <div style="text-align:center;padding:32px 0;">
+      <div style="font-size:56px;margin-bottom:16px;">🌾</div>
+      <div class="success-title" style="font-size:22px;">Demo request submitted!</div>
+      <p style="color:var(--text-muted);font-size:14px;margin-top:10px;line-height:1.6;">
+        Thank you, ${state.contact.fname}. The Trace AgTech team will reach out<br>to <strong>${state.contact.email}</strong> within one business day.
+      </p>
+      <div style="margin-top:24px;padding:16px 20px;background:var(--green-light);border-radius:14px;border:1px solid rgba(45,90,63,0.15);text-align:left;">
+        <div style="font-size:12px;font-weight:600;color:var(--green-deep);margin-bottom:8px;letter-spacing:0.5px;text-transform:uppercase;">While you wait</div>
+        <div style="font-size:13px;color:var(--green-mid);line-height:1.7;">
+          → Explore our <strong>case studies</strong> from similar operations<br>
+          → Watch a <strong>3-minute product overview</strong> video<br>
+          → Join our <strong>WhatsApp community</strong> for agri-traceability news
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function stepNext() {
+  const canProceed = [
+    () => !!state.industry,
+    () => state.pains.length >= 2,
+    () => state.modules.length >= 1,
+    () => !!state.scale,
+    () => isContactValid(),
+  ];
+  if (state.step < 4 && canProceed[state.step]()) {
+    state.step++;
+    render();
+  } else if (state.step === 4) {
+    generateDemo();
+  }
+}
+
+render();
+</script>
